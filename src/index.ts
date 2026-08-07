@@ -13,7 +13,7 @@ import { z } from "zod";
 import { ApiError, call, expect, json, pollSeconds } from "./api.js";
 import { totp } from "./totp.js";
 
-const server = new McpServer({ name: "sv-number", version: "1.0.0" });
+const server = new McpServer({ name: "sv-number", version: "1.0.1" });
 
 const text = (value: unknown) => ({
   content: [{ type: "text" as const, text: typeof value === "string" ? value : JSON.stringify(value, null, 2) }],
@@ -182,7 +182,10 @@ server.tool(
       while (Date.now() < deadline) {
         const reply = await call("getStatus", { id: activationId });
         if (reply.startsWith("STATUS_OK")) return text({ code: reply.split(":")[1] });
-        if (reply === "STATUS_CANCEL") return text({ code: null, state: "cancelled" });
+        // the same answer covers a cancellation you made and the 20 minute expiry
+        if (reply === "STATUS_CANCEL") return text({ code: null, state: "cancelled",
+          next: "The activation is over and the money is back on the balance. Order a fresh "
+              + "number instead of calling this id again." });
         if (!reply.startsWith("STATUS_")) throw new ApiError(reply.split(":")[0], reply);
         await new Promise((resolve) => setTimeout(resolve, pollSeconds * 1000));
       }

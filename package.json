@@ -1,0 +1,37 @@
+{
+  "name": "@sv-number/mcp-server",
+  "version": "1.0.0",
+  "description": "Phone numbers for AI agents: order a private number in any country, read the SMS verification code, hand it back.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "sv-number-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai-agents",
+    "sms",
+    "otp",
+    "phone-verification"
+  ]
+}

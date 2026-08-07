@@ -15,7 +15,7 @@ finish_activation(activationId)         ->  done
 Claude Code:
 
 ```bash
-claude mcp add sv-number --env SVN_API_KEY=your_key_here -- npx -y github:sv-number/mcp-server
+claude mcp add sv-number --env SVN_API_KEY=your_key_here -- npx -y sv-number-mcp
 ```
 
 Anything that reads a JSON config (Codex, Cursor, Claude Desktop):
@@ -25,7 +25,7 @@ Anything that reads a JSON config (Codex, Cursor, Claude Desktop):
   "mcpServers": {
     "sv-number": {
       "command": "npx",
-      "args": ["-y", "github:sv-number/mcp-server"],
+      "args": ["-y", "sv-number-mcp"],
       "env": { "SVN_API_KEY": "your_key_here" }
     }
   }

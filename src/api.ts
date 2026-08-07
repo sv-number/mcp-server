@@ -16,10 +16,16 @@ export class ApiError extends Error {
 // what the markers mean, in words an agent can act on
 const ERRORS: Record<string, string> = {
   BAD_KEY: "The API key is not accepted. Check SVN_API_KEY.",
+  // checked against the live API: an unknown service, an unknown country and an unknown
+  // activation id all come back as ERROR_API, so this is not only a server-side failure
+  ERROR_API: "Either the parameters are wrong (unknown service, country or activation id) "
+    + "or the provider had a hiccup. Check the values against list_services and "
+    + "list_countries before retrying.",
   ERROR_SQL: "Server-side error on the provider side. Retry with a backoff.",
-  ERROR_API: "Server-side error on the provider side. Retry with a backoff.",
-  BAD_ACTION: "The action is not supported by the API.",
-  BAD_SERVICE: "Unknown service code. Read list_services for the current codes.",
+  BAD_ACTION: "Malformed parameters, for example an activation id that is not a number.",
+  NO_METHOD: "Unknown action.",
+  BAD_STATUS: "The activation is not in a state where that call makes sense: it may be "
+    + "cancelled, already finished, or still waiting for its first code.",
   NO_BALANCE: "The account balance is empty. It has to be topped up before ordering.",
   NO_NUMBERS: "No numbers for this country and service right now. Change country, or set operator to any.",
   NO_ACTIVATION: "Unknown activation id, or the 20 minutes already ran out.",

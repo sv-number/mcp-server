@@ -61,7 +61,8 @@ server.tool(
 server.tool(
   "list_services",
   "Services available in a country: service code, price, how many numbers are online, and the "
-  + "share of codes that actually arrived for other users. Pick by that share, not by price alone.",
+  + "share of codes that arrived for other users. deliveredPercent is null when the pair has no "
+  + "statistics yet, which is the common case; then judge the pair by how many numbers are online.",
   {
     country: z.number().int().describe("Country id from list_countries"),
     search: z.string().optional().describe("Filter by service name, case-insensitive"),
@@ -74,10 +75,12 @@ server.tool(
       const found = search
         ? services.filter((s) => s.name.toLowerCase().includes(search.toLowerCase()))
         : services;
-      return text(found.map((s) => ({
-        service: s.id, name: s.name, price: s.price,
-        online: s.quantity, deliveredPercent: s.deliverability ?? null,
-      })));
+      return text(found.map((s) => {
+        // the API sends 0 where it has no statistics, which is not the same as "nothing arrives"
+        const measured = Number(s.deliverability ?? 0);
+        return { service: s.id, name: s.name, price: s.price, online: s.quantity,
+                 deliveredPercent: measured > 0 ? measured : null };
+      }));
     } catch (error) {
       return failure(error);
     }
@@ -169,7 +172,8 @@ server.tool(
 
 server.tool(
   "request_another_sms",
-  "Ask for one more code on the same number, for a password reset or a re-send.",
+  "Ask for one more code on the same number, for a password reset or a re-send. Works "
+  + "only after a first code has already arrived; before that the API refuses it.",
   { activationId: z.string() },
   async ({ activationId }) => {
     try {

@@ -58,29 +58,81 @@ server.tool(
   },
 );
 
+type Service = { id: string; name: string; price: number; quantity: number; deliverability?: string };
+
+// The catalogue is written in site names, an agent usually holds a URL: "discord.com" has to
+// find "Discord". Strip what the URL adds around the name and keep the raw query as well,
+// because a few entries spell the domain out ("X.com (Twitter)").
+const bareName = (query: string) =>
+  query.toLowerCase().trim()
+    .replace(/^[a-z]+:\/\//, "").replace(/^www\./, "")
+    .replace(/\/.*$/, "").replace(/\.[a-z]{2,}$/, "");
+
+// A short query lands inside unrelated names: "x" sits in the middle of "Maxim". Matching the
+// whole word first keeps those below the site the agent actually asked for.
+const escapeRe = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const wholeWord = (name: string, needle: string) =>
+  needle.length > 0 && new RegExp(`(^|[^a-z0-9])${escapeRe(needle)}([^a-z0-9]|$)`).test(name);
+
+// Lower is better. Ranking matters because a short query matches dozens of names and the
+// agent picks the first thing it reads.
+const rank = (service: Service, query: string, bare: string) => {
+  const id = service.id.toLowerCase();
+  const name = service.name.toLowerCase();
+  if (id === query || id === bare) return 0;
+  if (name === query || name === bare) return 1;
+  if (wholeWord(name, query)) return 2;
+  if (wholeWord(name, bare)) return 3;
+  if (name.includes(query)) return 4;
+  if (name.startsWith(bare)) return 5;
+  if (name.includes(bare)) return 6;
+  return -1;
+};
+
+const view = (service: Service) => {
+  // the API sends 0 where it has no statistics, which is not the same as "nothing arrives"
+  const measured = Number(service.deliverability ?? 0);
+  return { service: service.id, name: service.name, price: service.price,
+           online: service.quantity, deliveredPercent: measured > 0 ? measured : null };
+};
+
 server.tool(
   "list_services",
-  "Services available in a country: service code, price, how many numbers are online, and the "
-  + "share of codes that arrived for other users. deliveredPercent is null when the pair has no "
-  + "statistics yet, which is the common case; then judge the pair by how many numbers are online.",
+  "Services available in a country, best match first. Order the code of the site you are "
+  + "registering with: a number bought for one service does not receive another service's SMS. "
+  + "Search by site name or domain, both work. The codes are arbitrary, so look them up instead "
+  + "of guessing: uk is Airbnb, not the United Kingdom. deliveredPercent is null when the pair "
+  + "has no statistics yet, which is the common case; then judge the pair by how many numbers "
+  + "are online. When the site is not in the catalogue at all, order notInList (ot), which "
+  + "receives SMS from any sender that is not in the list.",
   {
     country: z.number().int().describe("Country id from list_countries"),
-    search: z.string().optional().describe("Filter by service name, case-insensitive"),
+    search: z.string().optional().describe("Site name or domain, for example discord or discord.com"),
   },
   async ({ country, search }) => {
     try {
-      const services = await json<Array<{ id: string; name: string; price: number;
-                                          quantity: number; deliverability?: string }>>(
-        "getServicesAndCostWithStatistics", { country });
-      const found = search
-        ? services.filter((s) => s.name.toLowerCase().includes(search.toLowerCase()))
-        : services;
-      return text(found.map((s) => {
-        // the API sends 0 where it has no statistics, which is not the same as "nothing arrives"
-        const measured = Number(s.deliverability ?? 0);
-        return { service: s.id, name: s.name, price: s.price, online: s.quantity,
-                 deliveredPercent: measured > 0 ? measured : null };
-      }));
+      const services = await json<Service[]>("getServicesAndCostWithStatistics", { country });
+      const fallback = services.find((s) => s.id === "ot");
+      const query = search?.toLowerCase().trim() ?? "";
+      if (!query) return text({ matches: services.map(view), notInList: fallback ? view(fallback) : null });
+
+      // a query that is nothing but a suffix ("...com") strips down to an empty string, and an
+      // empty needle matches every name in the catalogue
+      const bare = bareName(query) || query;
+      const found = services
+        .map((s) => ({ s, r: rank(s, query, bare) }))
+        .filter((hit) => hit.r >= 0)
+        .sort((a, b) => a.r - b.r || b.s.quantity - a.s.quantity)
+        .map((hit) => view(hit.s));
+
+      return text({
+        matches: found,
+        notInList: fallback ? view(fallback) : null,
+        note: found.length ? undefined
+          : "Nothing here matches that name. The catalogue differs from country to country, so "
+            + "try another country id before deciding the service is unavailable. If the site is "
+            + "genuinely unlisted, order notInList (ot).",
+      });
     } catch (error) {
       return failure(error);
     }
@@ -90,9 +142,12 @@ server.tool(
 server.tool(
   "order_number",
   "Order a private number for one service in one country. The number is held for 20 minutes "
-  + "and belongs to this activation alone. Money is held now and charged when the code arrives.",
+  + "and belongs to this activation alone. Money is held now and charged when the code arrives. "
+  + "The service code has to be the one for the site you are registering with, otherwise its SMS "
+  + "goes to a different pool and never reaches you.",
   {
-    service: z.string().describe("Service code from list_services, for example tg"),
+    service: z.string().describe("Service code from list_services, for example tg. It must belong "
+      + "to the site you are registering with, or be ot when that site is not in the catalogue"),
     country: z.number().int().describe("Country id from list_countries"),
     operator: z.string().default("any").describe("Operator, or any to keep the pool wide"),
     maxPrice: z.number().optional().describe("Ceiling per activation; prices float with demand"),

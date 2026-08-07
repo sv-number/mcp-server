@@ -51,8 +51,10 @@ leaves the process, no tool returns it and no error message quotes it.
 | `request_another_sms` | ask for one more code on the same number |
 | `totp_code` | compute the authenticator code locally, by RFC 6238 |
 
-`list_services` returns a delivery rate per service and country. An agent that picks by
-that number instead of by price stops paying for cheap countries where codes never arrive.
+`list_services` returns a delivery rate per service and country as `deliveredPercent`, and
+`null` when that pair has no statistics yet, which is the common case. Where there is a
+number, pick by it instead of by price; where there is not, `online` shows how big the live
+pool is, which is the next best signal.
 
 ## What the server handles for you
 

@@ -1,6 +1,7 @@
 {
   "name": "sv-number-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
+  "mcpName": "io.github.sv-number/mcp-server",
   "description": "Phone numbers for AI agents: order a private number in any country, read the SMS verification code, hand it back.",
   "license": "MIT",
   "homepage": "https://sms-verification-number.com/en/number-for-ai-agents/",

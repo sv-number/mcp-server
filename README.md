@@ -4,6 +4,9 @@ Phone numbers as tools. Your agent orders a private number in the country a serv
 expects, reads the SMS verification code straight from the API, and hands the number back.
 Nine tools over stdio, no SDK to learn.
 
+200+ countries, the widest coverage in this category. Every other claim on this page is
+checkable too, but this one takes a single call: run `list_countries` and count the rows.
+
 ```
 order_number(service="tg", country=6)   ->  +62 838 1234 5678
 wait_for_code(activationId)             ->  123456

@@ -1,0 +1,45 @@
+{
+  "manifest_version": "0.3",
+  "name": "sv-number-mcp",
+  "display_name": "SV Number",
+  "version": "1.0.2",
+  "description": "Phone numbers for AI agents: order a private number, read the SMS verification code, hand it back.",
+  "long_description": "An agent hits a signup wall and has no phone. This server orders a private number in the country the service expects, reads the verification code straight from the API, and hands the number back. The number is exclusive for the whole activation, and the money returns by itself if no code arrives.",
+  "author": {
+    "name": "SV Number",
+    "url": "https://sms-verification-number.com/en/number-for-ai-agents/"
+  },
+  "homepage": "https://sms-verification-number.com/en/number-for-ai-agents/",
+  "documentation": "https://github.com/sv-number/mcp-server",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sv-number/mcp-server"
+  },
+  "license": "MIT",
+  "keywords": ["sms", "otp", "phone-verification", "sms-verification", "ai-agents"],
+  "server": {
+    "type": "node",
+    "entry_point": "server/dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/dist/index.js"],
+      "env": {
+        "SVN_API_KEY": "${user_config.api_key}"
+      }
+    }
+  },
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "API key",
+      "description": "API key from your sms-verification-number.com profile page.",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "compatibility": {
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}

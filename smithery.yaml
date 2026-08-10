@@ -1,0 +1,22 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+#
+# Без этого файла Smithery репозиторий не берёт: их сборка читает startCommand, чтобы
+# понять, чем запускать сервер и что спросить у пользователя перед запуском.
+
+startCommand:
+  type: stdio
+  configSchema:
+    # Ключ приходит от пользователя и уходит в окружение процесса. Наружу его не отдаёт
+    # ни один инструмент и не показывает ни одно сообщение об ошибке.
+    type: object
+    required:
+      - svnApiKey
+    properties:
+      svnApiKey:
+        type: string
+        description: API key from your sms-verification-number.com profile page.
+  commandFunction: |-
+    (config) => ({ command: 'node', args: ['dist/index.js'], env: { SVN_API_KEY: config.svnApiKey } })
+
+build:
+  dockerBuildPath: ./

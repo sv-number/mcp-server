@@ -6,6 +6,8 @@
 // The key is read from the environment and never leaves this process: no tool returns it,
 // and no error message quotes it.
 
+import { readFileSync } from "node:fs";
+
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -13,7 +15,13 @@ import { z } from "zod";
 import { ApiError, call, expect, json, pollSeconds } from "./api.js";
 import { totp } from "./totp.js";
 
-const server = new McpServer({ name: "sv-number", version: "1.0.1" });
+// Версия берётся из пакета, а не вписывается сюда: вписанная разошлась с package.json
+// и сервер представлялся клиентам чужим номером версии.
+const { version } = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+) as { version: string };
+
+const server = new McpServer({ name: "sv-number", version });
 
 const text = (value: unknown) => ({
   content: [{ type: "text" as const, text: typeof value === "string" ? value : JSON.stringify(value, null, 2) }],

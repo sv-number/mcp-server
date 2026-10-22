@@ -1,5 +1,7 @@
 # SV Number MCP server
 
+[![LightNow capabilities](https://lightnow.ai/badge/io.github.sv-number/mcp-server)](https://lightnow.ai/servers/io.github.sv-number/mcp-server)
+
 Phone numbers as tools. Your agent orders a private number in the country a service
 expects, reads the SMS verification code straight from the API, and hands the number back.
 Nine tools over stdio, no SDK to learn.

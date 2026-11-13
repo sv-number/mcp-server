@@ -1,0 +1,17 @@
+{
+  "name": "sv-number",
+  "version": "1.0.3",
+  "description": "Phone numbers as tools for AI agents: order a private number, read the SMS verification code, hand the number back. Free start: promo code SVFREE gives one free number per account. Enter it on the top-up page in the coupon field. The code works for the first 1000 activations.",
+  "mcpServers": {
+    "sv-number": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "sv-number-mcp"
+      ],
+      "env": {
+        "SVN_API_KEY": "${SVN_API_KEY}"
+      }
+    }
+  }
+}

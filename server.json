@@ -7,13 +7,13 @@
     "source": "github"
   },
   "websiteUrl": "https://sms-verification-number.com/en/number-for-ai-agents/",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "packages": [
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "sv-number-mcp",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "transport": {
         "type": "stdio"
       },

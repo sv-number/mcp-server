@@ -4,7 +4,7 @@ Phone numbers as tools. Your agent orders a private number in the country a serv
 expects, reads the SMS verification code straight from the API, and hands the number back.
 Nine tools over stdio, no SDK to learn.
 
-Free start: promo code SVFREE gives one free number per account. Enter it on the top-up page in the coupon field. The code works for the first 1000 activations.
+Free start: promo code SVFREE gives one free number per account. Enter it in the promo code field on your profile page (sms-verification-number.com/en/user/profile/), next to the API key, and click Apply. The code works for the first 1000 activations.
 
 200+ countries, the widest coverage in this category. Every other claim on this page is
 checkable too, but this one takes a single call: run `list_countries` and count the rows.

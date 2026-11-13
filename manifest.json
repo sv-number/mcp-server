@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "sv-number-mcp",
   "display_name": "SV Number",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Phone numbers for AI agents: order a private number, read the SMS verification code, hand it back.",
   "long_description": "An agent hits a signup wall and has no phone. This server orders a private number in the country the service expects, reads the verification code straight from the API, and hands the number back. The number is exclusive for the whole activation, and the money returns by itself if no code arrives.",
   "author": {

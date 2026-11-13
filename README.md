@@ -38,7 +38,8 @@ Anything that reads a JSON config (Codex, Cursor, Claude Desktop):
 ```
 
 The key comes from [your profile](https://sms-verification-number.com/en/user/profile/)
-after [signup](https://sms-verification-number.com/en/register/). The balance has to be
+after [signup](https://sms-verification-number.com/en/register/). A new account has no key
+yet: generate it on the profile page first. The balance has to be
 funded, apart from the SVFREE start number. The key is read from the environment and never
 leaves the process, no tool returns it and no error message quotes it.
 

@@ -4,6 +4,8 @@ Phone numbers as tools. Your agent orders a private number in the country a serv
 expects, reads the SMS verification code straight from the API, and hands the number back.
 Nine tools over stdio, no SDK to learn.
 
+Free start: promo code SVFREE gives one free number per account. Enter it on the top-up page in the coupon field. The code works for the first 1000 activations.
+
 200+ countries, the widest coverage in this category. Every other claim on this page is
 checkable too, but this one takes a single call: run `list_countries` and count the rows.
 
@@ -37,7 +39,7 @@ Anything that reads a JSON config (Codex, Cursor, Claude Desktop):
 
 The key comes from [your profile](https://sms-verification-number.com/en/user/profile/)
 after [signup](https://sms-verification-number.com/en/register/). The balance has to be
-funded: there is no free tier on this API. The key is read from the environment and never
+funded, apart from the SVFREE start number. The key is read from the environment and never
 leaves the process, no tool returns it and no error message quotes it.
 
 ## Tools

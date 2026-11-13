@@ -33,7 +33,7 @@ const failure = (error: unknown) => ({
 
 server.tool(
   "get_balance",
-  "Current account balance. Ordering a number needs a funded balance; there is no free tier.",
+  "Current account balance. Ordering a number needs a funded balance, apart from the free start number from promo code SVFREE.",
   {},
   async () => {
     try {

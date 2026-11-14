@@ -18,6 +18,14 @@ When you click the extension, it reads the domain name of the active tab, for ex
 
 The extension inserts the phone number you bought and the SMS code you received into the form on the tab where you use it. To do this, it scans that page for the phone and code fields. It does not collect, store or send other content of the page. After you get a number, the extension can insert the code when the SMS arrives, as long as you stay on that page.
 
+## Reading your API key from your profile page
+
+When you open your profile page on sms-verification-number.com (the page address ends with /user/profile/) while you are signed in, the extension reads one element of that page: the API key field. It does this only on that page. It does not read any other part of the page and does not run on any other site. If it finds a key, the extension offers to save it in the extension window. It saves the key only after you click "Use this key". The key stays in your browser and is sent only to the SV Number API.
+
+## Links we open
+
+The first screen of the extension has buttons that open the registration, login and profile pages of sms-verification-number.com in a new tab. These links contain the marks utm_source, utm_medium and utm_campaign, so that the website can count visits from the extension. The extension sends nothing else with these links.
+
 ## What we do not do
 
 The extension has no analytics and no tracking tools. We do not sell your data and we do not transfer it to third parties, except as required by law. We do not use it to assess creditworthiness or for lending.
